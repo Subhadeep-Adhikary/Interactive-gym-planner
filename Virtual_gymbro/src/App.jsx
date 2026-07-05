@@ -1,17 +1,14 @@
-import { useState } from 'react'
-
+import { use, useState } from 'react'
 import './App.css'
+import Inputform from './components/input'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  
 
   return (
     <>
-       <div className="h-screen flex items-center justify-center bg-green-500">
-      <h1 className="text-4xl font-bold text-white">
-        Tailwind is Working ✅
-      </h1>
-    </div>
+    <Inputform />
     </>
   )
 }
