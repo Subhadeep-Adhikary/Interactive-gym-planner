@@ -3,6 +3,7 @@ import './App.css';
 import Inputform from './components/input';
 import Daypage from './components/Daypage';
 import WeekPage from './components/Weekpage';
+import { exdata } from './hooks/handleEx';
 
 function App() {
   const [number, setNumber] = useState(3);
@@ -111,6 +112,11 @@ function App() {
             <Daypage planner={planner.find(p => p.day === (selectDate?selectDate:curday))} done={done} day={selectDate?selectDate:curday} onBack={back}/>
           )
         }
+        <button onClick={()=>{
+          setPlanner(null)
+        }} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          Update Planner
+        </button>
       </div>  
         )
       :<Inputform 

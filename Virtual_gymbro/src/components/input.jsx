@@ -30,6 +30,7 @@ export default function Inputform({
         <input 
           type="number" 
           max="7"
+          required
           defaultValue="3"
           min="1"
           onChange={updateDays}
@@ -55,12 +56,14 @@ export default function Inputform({
               <input 
                 name={`day${dayIndex}-exercise${exIndex}-name`} 
                 placeholder="Exercise name" 
+                required
                 className="col-span-1 sm:col-span-3 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
               <input 
                 name={`day${dayIndex}-exercise${exIndex}-set`} 
                 type="number" 
                 placeholder="Sets" 
+                required
                 className="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
               <input 
@@ -69,6 +72,11 @@ export default function Inputform({
                 placeholder="Reps" 
                 className="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
+              <input
+                type="text"
+                name={`day${dayIndex}-exercise${exIndex}-time`}
+                placeholder="Time (e.g. 30s, 1min)"
+                className="w-28 border rounded px-2 py-1"/>
             </div>
           ))}
 

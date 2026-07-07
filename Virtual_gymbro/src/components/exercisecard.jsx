@@ -30,20 +30,20 @@ export default function Exersiecard({ Exersie,Done }) {
       </div>
 
       {/* Right Side: Muscle Image and Checkbox */}
-      <div className="flex-shrink-0 flex items-center justify-end p-2 sm:p-4 bg-gray-50 border-l space-x-2 sm:space-x-4">
-        <img 
-          src={`https://placehold.co/150x150/e2e8f0/2d3748?text=Muscle`} 
-          alt="Target muscle" 
-          className="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover shadow-md"
-        />
-        <input
-          type="checkbox"
-          value={Exersie.name}
-          id={`done-${Exersie.name}`}
-          onChange={Done}
-          className="h-7 w-7 sm:h-8 sm:w-8 text-green-600 border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:ring-offset-2 cursor-pointer"
-        />
-      </div>
-    </div>
+     <div className="flex-shrink-0 flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 border-t lg:border-l gap-3">
+  <img 
+    src={`https://placehold.co/150x150/e2e8f0/2d3748?text=Muscle`} 
+    alt="Target muscle" 
+    className="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover shadow-md"
+  />
+  <input
+    type="checkbox"
+    value={Exersie.name}
+    id={`done-${Exersie.name}`}
+    onChange={Done}
+    className="h-7 w-7 text-green-600 border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 cursor-pointer"
+  />
+</div>
+    </div>        
   );
 }
