@@ -1,42 +1,47 @@
 import React from "react";
 
-export default function Exersiecard({ Exersie, Done }) {
+export default function Exersiecard({ Exersie,Done }) {
   return (
-    <div className="max-w-sm mx-auto bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-      
-      {/* Exercise Image */}
-      <div className="w-full h-48 bg-gray-100 flex items-center justify-center">
-        <img
-          src=""
-          alt="Form"
-          className="object-cover h-full w-full"
+    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-stretch">
+      {/* Left Side: Exercise Image */}
+      <div className="w-24 sm:w-28 flex-shrink-0">
+        <img 
+          src={`https://placehold.co/400x400/e2e8f0/2d3748?text=Exercise`} 
+          alt={`${Exersie.name} form`} 
+          className="w-full h-full object-cover"
         />
       </div>
 
-      {/* Exercise Details */}
-      <div className="p-4 space-y-2">
-        <h1 className="text-lg font-semibold text-gray-800">{Exersie.name}</h1>
-        <p className="text-sm text-gray-600">Sets: {Exersie.set}</p>
-        <p className="text-sm text-gray-600">Reps: {Exersie.reps}</p>
-        <p className="text-sm text-gray-600">Rest: {Exersie.Rest}</p>
+      {/* Middle: Exercise Details */}
+      <div className="p-3 sm:p-4 flex-grow">
+        <h3 className="text-xl font-bold text-gray-800 truncate">{Exersie.name}</h3>
+        <p className="text-xs sm:text-sm text-gray-400 mb-2">Recommended: 60-90s Rest</p>
+        
+        <div className="flex gap-2 sm:gap-4 text-center">
+          <div className="bg-blue-50 p-2 rounded-lg">
+            <p className="text-sm font-medium text-blue-800">Sets</p>
+            <p className="text-lg font-bold text-blue-600">{Exersie.set}</p>
+          </div>
+          <div className="bg-green-50 p-2 rounded-lg">
+            <p className="text-sm font-medium text-green-800">Reps</p>
+            <p className="text-lg font-bold text-green-600">{Exersie.rep}</p>
+          </div>
+        </div>
       </div>
 
-      {/* Target Muscle Image */}
-      <div className="w-full h-32 bg-gray-50 flex items-center justify-center border-t">
-        <img
-          src=""
-          alt="Target muscle"
-          className="object-contain h-full"
+      {/* Right Side: Muscle Image and Checkbox */}
+      <div className="flex-shrink-0 flex items-center justify-end p-2 sm:p-4 bg-gray-50 border-l space-x-2 sm:space-x-4">
+        <img 
+          src={`https://placehold.co/150x150/e2e8f0/2d3748?text=Muscle`} 
+          alt="Target muscle" 
+          className="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover shadow-md"
         />
-      </div>
-
-      {/* Done Checkbox */}
-      <div className="p-4 border-t flex items-center space-x-2">
         <input
           type="checkbox"
+          value={Exersie.name}
           id={`done-${Exersie.name}`}
           onChange={Done}
-          className="h-5 w-5 text-green-600 border-gray-300 rounded focus:ring-green-500 cursor-pointer"
+          className="h-7 w-7 sm:h-8 sm:w-8 text-green-600 border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:ring-offset-2 cursor-pointer"
         />
       </div>
     </div>

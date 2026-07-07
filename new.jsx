@@ -1,0 +1,10 @@
+{
+    day:"Monday";
+    Exercise:[
+        {
+            Name:"Pushup",
+            set:3,
+            rep:12
+        }
+    ]
+}
