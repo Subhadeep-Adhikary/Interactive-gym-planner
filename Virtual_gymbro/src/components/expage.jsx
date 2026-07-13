@@ -1,30 +1,14 @@
 import React, { useState } from "react";
 
-export default function ExPage({ exercise, onBack }) {
+export default function ExPage({ exercise,onBackpage,addlog,date }) {
   // Progressive overload log (weight, reps, date)
-  const [log, setLog] = useState([]);
-  const [weight, setWeight] = useState("");
-  const [reps, setReps] = useState("");
-
-  const addLog = () => {
-    if (!weight || !reps) return;
-    const newEntry = {
-      date: new Date().toLocaleDateString(),
-      weight,
-      reps
-    };
-    setLog(prev => [...prev, newEntry]);
-    setWeight("");
-    setReps("");
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-lg p-6">
         
         {/* Back Button */}
         <button
-          onClick={onBack}
+          onClick={onBackpage}
           className="mb-4 px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors duration-300"
         >
           ← Back to Day
@@ -74,28 +58,28 @@ export default function ExPage({ exercise, onBack }) {
         {/* Progressive Overload Log */}
         <div className="mt-8">
           <h3 className="text-xl font-bold text-gray-800 mb-4">Progressive Overload Log</h3>
-          <div className="flex gap-4 mb-4">
+          <form className="flex gap-4 mb-4" onSubmit={(e) => addlog(e, exercise)}>
+            <input type="date" name="date" required value={date} className="border rounded-lg px-3 py-2" />
             <input
               type="number"
+              name="weight"
+              disabled={exercise.exobject.equipment?.toLowerCase() === "body only"}
               placeholder="Weight (kg)"
-              value={weight}
-              onChange={(e) => setWeight(e.target.value)}
               className="border rounded-lg px-3 py-2 w-32"
             />
             <input
               type="number"
-              placeholder="Reps"
-              value={reps}
-              onChange={(e) => setReps(e.target.value)}
+              name="reps/time"
+              placeholder="Reps or time"
               className="border rounded-lg px-3 py-2 w-32"
             />
             <button
-              onClick={addLog}
+              type="submit"
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
             >
               Add Entry
             </button>
-          </div>
+          </form>
 
           {/* Log Table */}
           <table className="w-full border-collapse border border-gray-300">
@@ -107,7 +91,7 @@ export default function ExPage({ exercise, onBack }) {
               </tr>
             </thead>
             <tbody>
-              {log.map((entry, idx) => (
+              {exercise.log.map((entry, idx) => (
                 <tr key={idx}>
                   <td className="border border-gray-300 px-4 py-2">{entry.date}</td>
                   <td className="border border-gray-300 px-4 py-2">{entry.weight}</td>

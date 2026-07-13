@@ -1,7 +1,7 @@
 import React from "react";
 import Exersiecard from "./exercisecard";
 
-export default function Daypage({ planner, done, onBack, day }) {
+export default function Daypage({ planner, done, onBack, day ,seedetails }) {
   const exerciselist = planner?.exercises|| [];
 
   return (
@@ -29,6 +29,7 @@ export default function Daypage({ planner, done, onBack, day }) {
                   key={idx}
                   Exersie={exercise}
                   Done={() => done(exercise)}
+                  seedetails={() => seedetails(exercise)}
                 />
               ))}
             </div>

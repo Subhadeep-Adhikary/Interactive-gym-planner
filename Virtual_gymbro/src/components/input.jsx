@@ -66,17 +66,6 @@ export default function Inputform({
                 required
                 className="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
-              <input 
-                name={`day${dayIndex}-exercise${exIndex}-rep`} 
-                type="number" 
-                placeholder="Reps" 
-                className="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              />
-              <input
-                type="text"
-                name={`day${dayIndex}-exercise${exIndex}-time`}
-                placeholder="Time (e.g. 30s, 1min)"
-                className="w-28 border rounded px-2 py-1"/>
             </div>
           ))}
 
