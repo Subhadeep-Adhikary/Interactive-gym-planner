@@ -6,15 +6,15 @@ export default function Exersiecard({ Exersie,Done }) {
       {/* Left Side: Exercise Image */}
       <div className="w-24 sm:w-28 flex-shrink-0">
         <img 
-          src={`https://placehold.co/400x400/e2e8f0/2d3748?text=Exercise`} 
-          alt={`${Exersie.name} form`} 
+          src={Exersie.exobject.images?.[0] || "https://placehold.co/400x400/e2e8f0/2d3748?text=Exercise"}
+          alt={`${Exersie.exobject.name} form`} 
           className="w-full h-full object-cover"
         />
       </div>
 
       {/* Middle: Exercise Details */}
       <div className="p-3 sm:p-4 flex-grow">
-        <h3 className="text-xl font-bold text-gray-800 truncate">{Exersie.name}</h3>
+        <h3 className="text-xl font-bold text-gray-800 truncate">{Exersie.exobject.name}</h3>
         <p className="text-xs sm:text-sm text-gray-400 mb-2">Recommended: 60-90s Rest</p>
         
         <div className="flex gap-2 sm:gap-4 text-center">
@@ -38,8 +38,8 @@ export default function Exersiecard({ Exersie,Done }) {
   />
   <input
     type="checkbox"
-    value={Exersie.name}
-    id={`done-${Exersie.name}`}
+    value={Exersie.exobject.name}
+    id={`done-${Exersie.exobject.name}`}
     onChange={Done}
     className="h-7 w-7 text-green-600 border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 cursor-pointer"
   />

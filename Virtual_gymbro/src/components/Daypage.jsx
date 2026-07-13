@@ -2,7 +2,7 @@ import React from "react";
 import Exersiecard from "./exercisecard";
 
 export default function Daypage({ planner, done, onBack, day }) {
-  const exerciselist = planner?.exercises || [];
+  const exerciselist = planner?.exercises|| [];
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
