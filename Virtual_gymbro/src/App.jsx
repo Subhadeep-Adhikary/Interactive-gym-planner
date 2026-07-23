@@ -3,7 +3,8 @@ import './App.css';
 import Inputform from './components/input';
 import Daypage from './components/Daypage';
 import WeekPage from './components/Weekpage';
-import {getExerciseByName} from './hooks/handleEx.js'
+import ExPage from './components/expage';
+import { getExerciseByName } from './hooks/handleEx'
 
 function App() {
   const [number, setNumber] = useState(3);
@@ -15,7 +16,7 @@ function App() {
   const [selectDate,setSelectDate]=useState(null)
   const [seedetails,setseedetails]=useState(false)
   const [log, setLog] = useState([]);
-  const [pageex, setPageex] = useState({});
+  const [pageex, setPageex] = useState(null);
 
   const weekday = [
     "Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"
@@ -63,10 +64,7 @@ function App() {
 
   const seedetail=(ex)=>{
     setseedetails(prev=>!prev)
-    let name=ex.name
-    let logs=planner.find(p => p.day === (selectDate?selectDate:curday)).exercises.find(e => e.name === ex.name).log || []
-    let exobject=planner.find(p => p.day === (selectDate?selectDate:curday)).exercises.find(e => e.name === ex.name)
-    setPageex({...ex,name: name, log: logs,exobject: exobject})
+    setPageex({ ...ex, log: ex.log || [] });
   }
 
   const onbackpage=()=>{
@@ -77,31 +75,54 @@ function App() {
   const updateDays = (e) => {                                      
     setNumber(parseInt(e.target.value));
   };
-   const addLog = (e,ex) => {
+   const addLog = (e, ex) => {
     e.preventDefault();
-    weight = e.target.weight.value;
-    reps = e.target["reps/time"].value;
-    if (!weight || !reps) return;
-    const newEntry = {
-      date: new Date().toLocaleDateString(),
-      weight,
-      reps
-    };
-    setLog(prev => [...prev, newEntry]);
-    planner.forEach(day => {
-      day.exercises.forEach(exercise => {
-        if (exercise.name === ex.name) {
-          if (!exercise.log) {
-            exercise.log = [];
-          }
-          exercise.log.push(newEntry);
-        }
+    const formData = new FormData(e.target);
+    const date = formData.get('date') || new Date().toLocaleDateString();
+    const setCount = Number(ex.set || ex.exobject?.set || 1);
+
+    const newEntries = [];
+    for (let i = 0; i < setCount; i++) {
+      const weight = formData.get(`weight-${i}`) || '';
+      const reps = formData.get(`repsOrTime-${i}`);
+      if (!reps) continue;
+      if (ex.exobject?.equipment?.toLowerCase() !== 'body only' && !weight) continue;
+      newEntries.push({
+        date,
+        weight,
+        repsOrTime: reps,
+        set: i + 1
       });
+    }
+
+    if (newEntries.length === 0) return;
+
+    setLog(prev => [...prev, ...newEntries]);
+
+    const updatedPlanner = planner.map(day => ({
+      ...day,
+      exercises: day.exercises.map(exercise => {
+        if (exercise.name === ex.name) {
+          return {
+            ...exercise,
+            log: [...(exercise.log || []), ...newEntries]
+          };
+        }
+        return exercise;
+      })
+    }));
+
+    setPlanner(updatedPlanner);
+    setPageex(prev => {
+      if (!prev || prev.name !== ex.name) return prev;
+      return {
+        ...prev,
+        log: [...(prev.log || []), ...newEntries]
+      };
     });
-    
   };
 
-  const handleplanner = async (e) => {
+  const handleplanner =(e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const newPlanner = [];
@@ -112,12 +133,12 @@ function App() {
       for (let j = 0; j < exnum[i]; j++) {
         const name = formData.get(`day${i}-exercise${j}-name`);
         const set = parseInt(formData.get(`day${i}-exercise${j}-set`));
-        const rep = parseInt(formData.get(`day${i}-exercise${j}-rep`));
-        const exobject = await getExerciseByName(name);
-        exercises.push({ ...exobject, set, rep });
+        const exobject = getExerciseByName(name);
+        exercises.push({name,exobject, set});
       }
       newPlanner.push({ day, exercises });
     }
+    console.log("New Planner:", newPlanner);
     setPlanner(newPlanner);
     
   };
