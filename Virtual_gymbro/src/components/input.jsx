@@ -9,7 +9,8 @@ export default function Inputform({
   increase,
   decrease,
   handleplanner,
-  updateDays
+  updateDays,
+  onBack
 }) {
 
   
@@ -19,6 +20,13 @@ export default function Inputform({
       onSubmit={handleplanner} 
       className="w-full max-w-4xl mx-auto p-6 sm:p-8 bg-gray-50 rounded-2xl shadow-2xl space-y-8 my-8"
     >
+      <button
+        type="button"
+        onClick={onBack}
+        className="rounded-lg bg-gray-200 px-4 py-2 font-semibold text-gray-700 hover:bg-gray-300"
+      >
+        Back
+      </button>
       <h2 className="text-3xl font-extrabold text-center text-blue-700 uppercase tracking-wide">
         🏋️‍♂️ Gym Workout Planner
       </h2>

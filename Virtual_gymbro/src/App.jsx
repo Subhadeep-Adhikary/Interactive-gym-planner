@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import Homepage from './components/homepage';
 import Inputform from './components/input';
 import Daypage from './components/Daypage';
 import WeekPage from './components/Weekpage';
 import ExPage from './components/expage';
+import PdfUploader from './components/inputpdf';
 import { getExerciseByName } from './hooks/handleEx'
 
 function App() {
@@ -17,10 +19,48 @@ function App() {
   const [seedetails,setseedetails]=useState(false)
   const [log, setLog] = useState([]);
   const [pageex, setPageex] = useState(null);
+  const [popup, setpopup] = useState(false);
+  const [entry, setEntry] = useState('');
+  const [oninput, setOninput] = useState(false);
 
   const weekday = [
     "Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"
   ];
+
+  const setmanual=()=>{
+    setEntry("manual")
+    setpopup(false)
+    setOninput(true)
+    console.log("Manual entry selected");
+  }
+
+  const setpdf=()=>{
+    setEntry("pdf")
+    setpopup(false)
+    setOninput(true)
+    console.log("PDF entry selected");
+  }
+
+  const settext=()=>{
+    setEntry("text")
+    setpopup(false)
+    setOninput(true)
+    console.log("Text entry selected");
+  }
+
+  const pop = () => {
+    setpopup(true)
+    
+  }
+
+  const closePopup1 = () => {
+    setpopup(false);
+  }
+
+  const backToHomepage = () => {
+    setOninput(false);
+    setEntry(null);
+  }
 
   const back=()=>{
     setSeeWeek((prev)=>!prev)
@@ -177,14 +217,17 @@ function App() {
             <Daypage planner={planner.find(p => p.day === (selectDate?selectDate:curday))} done={done} day={selectDate?selectDate:curday} onBack={back} seedetails={seedetail}/>
           )
         }
-        <button onClick={()=>{
-          setPlanner(null)
-        }} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-          Update Planner
-        </button>
-      </div>  
+        <div className="flex justify-center mt-1">
+          <button onClick={() => setPlanner(null)} className="px-6 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors duration-200">
+            Update Planner
+          </button>
+        </div>
+      </div>
         )
-      :<Inputform 
+      :(
+        oninput?
+        (entry&&
+          <Inputform 
         number={number} 
         exnum={exnum} 
         weekday={weekday} 
@@ -192,7 +235,12 @@ function App() {
         decrease={decrease} 
         handleplanner={handleplanner} 
         updateDays={updateDays} 
-      />
+        onBack={backToHomepage}
+      />)
+        :
+        <Homepage popup={popup} onAddPlanner={() => pop() } closePopup1={closePopup1} setmanual={setmanual} setpdf={setpdf} settext={settext} />
+      
+      )
     }
       
     </>
