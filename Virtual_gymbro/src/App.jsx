@@ -9,10 +9,26 @@ import PdfUploader from './components/inputpdf';
 import { getExerciseByName } from './hooks/handleEx'
 
 function App() {
-  const [number, setNumber] = useState(3);
-  const [exnum, setExnum] = useState(Array(3).fill(1));
-  const [planner, setPlanner] = useState(null);
-  const [curday,setCurday]=useState(null)
+  const weekday = [
+    "Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"
+  ];
+  const [planner, setPlanner] = useState(() => {
+    try {
+      const savedPlanner = localStorage.getItem('planner');
+      const parsedPlanner = savedPlanner ? JSON.parse(savedPlanner) : null;
+      return Array.isArray(parsedPlanner) ? parsedPlanner : null;
+    } catch {
+      return null;
+    }
+  });
+  const [number, setNumber] = useState(() => planner?.length || 3);
+  const [exnum, setExnum] = useState(() => planner
+    ? planner.map(day => Math.max(day.exercises?.length || 0, 1))
+    : Array(3).fill(1));
+  const [curday,setCurday]=useState(() => {
+    const today = new Date().getDay();
+    return weekday[today === 0 ? 6 : today - 1];
+  })
   const [doneinweek,setDoneinweek]=useState([])
   const [seeWeek,setSeeWeek]=useState(false)
   const [selectDate,setSelectDate]=useState(null)
@@ -20,12 +36,8 @@ function App() {
   const [log, setLog] = useState([]);
   const [pageex, setPageex] = useState(null);
   const [popup, setpopup] = useState(false);
-  const [entry, setEntry] = useState('');
-  const [oninput, setOninput] = useState(false);
-
-  const weekday = [
-    "Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"
-  ];
+  const [entry, setEntry] = useState(() => planner ? null : "manual");
+  const [oninput, setOninput] = useState(() => !planner);
 
   const setmanual=()=>{
     setEntry("manual")
@@ -60,6 +72,24 @@ function App() {
   const backToHomepage = () => {
     setOninput(false);
     setEntry(null);
+  }
+
+  const editPlanner = () => {
+    setNumber(planner.length);
+    setExnum(planner.map(day => Math.max(day.exercises?.length || 0, 1)));
+    setEntry("manual");
+    setOninput(true);
+  }
+
+  const removePlanner = () => {
+    if (!window.confirm("Remove your current planner from this browser?")) return;
+    setPlanner(null);
+    setSelectDate(null);
+    setSeeWeek(false);
+    setPageex(null);
+    setseedetails(false);
+    setEntry(null);
+    setOninput(false);
   }
 
   const back=()=>{
@@ -113,7 +143,9 @@ function App() {
   }
 
   const updateDays = (e) => {                                      
-    setNumber(parseInt(e.target.value));
+    const dayCount = parseInt(e.target.value);
+    setNumber(dayCount);
+    setExnum(Array(dayCount).fill(1));
   };
    const addLog = (e, ex) => {
     e.preventDefault();
@@ -174,36 +206,31 @@ function App() {
         const name = formData.get(`day${i}-exercise${j}-name`);
         const set = parseInt(formData.get(`day${i}-exercise${j}-set`));
         const exobject = getExerciseByName(name);
-        exercises.push({name,exobject, set});
+        const previousExercise = planner
+          ?.find(existingDay => existingDay.day === day)
+          ?.exercises.find(exercise => exercise.name === name);
+        exercises.push({name,exobject, set, ...(previousExercise?.log ? { log: previousExercise.log } : {})});
       }
       newPlanner.push({ day, exercises });
     }
     console.log("New Planner:", newPlanner);
     setPlanner(newPlanner);
-    
+    setOninput(false);
+    setEntry(null);
   };
 
   useEffect(() => {
-    setExnum(Array(number).fill(1));
-  }, [number]);
-  
-  const today=new Date()
-
-
-  
-  useEffect(()=>{
-    if(today.getDay()==0){
-      setCurday(weekday[0])
-    }else{
-      setCurday(weekday[today.getDay()-1])
+    if (planner) {
+      localStorage.setItem('planner', JSON.stringify(planner));
+    } else {
+      localStorage.removeItem('planner');
     }
-    
-  },[today])
+  }, [planner]);
 
   return (
     <>
     {
-      planner?
+      planner && !oninput?
       (
       <div>
         {
@@ -217,9 +244,12 @@ function App() {
             <Daypage planner={planner.find(p => p.day === (selectDate?selectDate:curday))} done={done} day={selectDate?selectDate:curday} onBack={back} seedetails={seedetail}/>
           )
         }
-        <div className="flex justify-center mt-1">
-          <button onClick={() => setPlanner(null)} className="px-6 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors duration-200">
-            Update Planner
+        <div className="flex justify-center gap-3 mt-1">
+          <button onClick={editPlanner} className="px-6 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors duration-200">
+            Edit Planner
+          </button>
+          <button onClick={removePlanner} className="px-6 py-3 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors duration-200">
+            Remove Plan
           </button>
         </div>
       </div>
@@ -230,6 +260,7 @@ function App() {
           <Inputform 
         number={number} 
         exnum={exnum} 
+        initialPlanner={planner}
         weekday={weekday} 
         increase={increase} 
         decrease={decrease} 

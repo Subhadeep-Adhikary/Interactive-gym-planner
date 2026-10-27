@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 export default function Inputform({
   number,
   exnum,
+  initialPlanner,
   weekday,
   increase,
   decrease,
@@ -39,7 +40,7 @@ export default function Inputform({
           type="number" 
           max="7"
           required
-          defaultValue="3"
+          value={number}
           min="1"
           onChange={updateDays}
           className="border border-gray-300 rounded-lg p-2 w-24 focus:ring-2 focus:ring-blue-500"
@@ -65,6 +66,7 @@ export default function Inputform({
                 name={`day${dayIndex}-exercise${exIndex}-name`} 
                 placeholder="Exercise name" 
                 required
+                defaultValue={initialPlanner?.[dayIndex]?.exercises?.[exIndex]?.name || ""}
                 className="col-span-1 sm:col-span-3 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
               <input 
@@ -72,6 +74,9 @@ export default function Inputform({
                 type="number" 
                 placeholder="Sets" 
                 required
+                min="1"
+                max="5"
+                defaultValue={initialPlanner?.[dayIndex]?.exercises?.[exIndex]?.set || ""}
                 className="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
             </div>
